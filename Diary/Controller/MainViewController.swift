@@ -8,29 +8,31 @@ import UIKit
 
 protocol MainViewControllerDelegate: AnyObject {
     func didTappedRightAddButton()
+    func didTappedTableViewCell(diaryContent: DiaryEntity)
 }
 
-final class MainViewController: UIViewController {
+final class MainViewController: UIViewController, ActivityViewControllerShowable, AlertControllerShowable {
     enum Section {
         case main
     }
     
     weak var delegate: MainViewControllerDelegate?
-    private let diaryContents: [DiaryContent]
+    private var diaryContents: [DiaryEntity]?
+    private let coreDataManager: CoreDataManager
     private let dateFormatter: DateFormatter
-    private var diffableDatasource: UITableViewDiffableDataSource<Section, DiaryContent>?
+    private var diffableDatasource: UITableViewDiffableDataSource<Section, DiaryEntity>?
     
-    private let tableView: UITableView = {
+    private lazy var tableView: UITableView = {
         let tableView = UITableView()
         
-        tableView.allowsSelection = false
+        tableView.delegate = self
         tableView.register(MainTableViewCell.self, forCellReuseIdentifier: MainTableViewCell.indentifier)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
     
-    init(diaryContents: [DiaryContent], dateFormatter: DateFormatter) {
-        self.diaryContents = diaryContents
+    init(coreDataManager: CoreDataManager, dateFormatter: DateFormatter) {
+        self.coreDataManager = coreDataManager
         self.dateFormatter = dateFormatter
         
         super.init(nibName: nil, bundle: nil)
@@ -47,13 +49,23 @@ final class MainViewController: UIViewController {
         setUpConstraints()
         setUpViewController()
         setUpTableViewDiffableDataSource()
-        setUpTableViewDiffableDataSourceSnapShot()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        fetchDiaryContents()
+        setUpTableViewDiffableDataSourceSnapShot()
+    }
+    
+    private func fetchDiaryContents() {
+        diaryContents = coreDataManager.fetch(request: DiaryEntity.fetchRequest())
+    }
+    
     private func configureUI() {
         view.addSubview(tableView)
     }
-        
+    
     private func setUpConstraints() {
         NSLayoutConstraint.activate([
             tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
@@ -84,12 +96,45 @@ extension MainViewController {
         })
     }
     
-    private func setUpTableViewDiffableDataSourceSnapShot() {
-        var snapShot = NSDiffableDataSourceSnapshot<Section, DiaryContent>()
+    private func setUpTableViewDiffableDataSourceSnapShot(animated: Bool = false) {
+        guard let diaryContents = diaryContents else { return }
+        var snapShot = NSDiffableDataSourceSnapshot<Section, DiaryEntity>()
         
         snapShot.appendSections([.main])
         snapShot.appendItems(diaryContents)
+        diffableDatasource?.apply(snapShot, animatingDifferences: false)
+    }
+    
+    private func deleteItemFromSnapShot(diaryContent: DiaryEntity) {
+        guard var snapShot = diffableDatasource?.snapshot() else { return }
+        
+        snapShot.deleteItems([diaryContent])
         diffableDatasource?.apply(snapShot)
+    }
+}
+
+// MARK: - TableViewDelegate
+extension MainViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let diaryContent = diaryContents?[indexPath.row] else { return }
+        
+        delegate?.didTappedTableViewCell(diaryContent: diaryContent)
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let shareAction = UIContextualAction(style: .normal, title: "Share") { action, view, handler in
+            self.didSwipedShareActionButton(index: indexPath.row)
+        }
+        
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { action, view, handler in
+            self.didSwipedDeleteActionButton(index: indexPath.row)
+        }
+
+        let swipeActionConfiguration = UISwipeActionsConfiguration(actions: [shareAction, deleteAction])
+        
+        swipeActionConfiguration.performsFirstActionWithFullSwipe = true
+        return swipeActionConfiguration
     }
 }
 
@@ -98,5 +143,25 @@ extension MainViewController {
     @objc
     private func didTappedRightAddButton() {
         delegate?.didTappedRightAddButton()
+    }
+    
+    private func didSwipedShareActionButton(index: Int) {
+        guard let diaryContent = self.diaryContents?[index] else { return }
+        let shareItem = diaryContent.title + "\n" + diaryContent.body
+        
+        self.showActivityViewController(items: [shareItem])
+    }
+    
+    private func didSwipedDeleteActionButton(index: Int) {
+//        guard let deletedDiaryContent = self.diaryContents?[index] else { return }
+//
+//        self.diaryContents?.remove(at: index)
+//        self.deleteItemFromSnapShot(diaryContent: deletedDiaryContent)
+//        self.coreDataManager.delete(object: deletedDiaryContent)
+        
+        showAlertController(title: "진짜요?",
+                            message: "정말로 삭제하시겠어요?",
+                            leftButtonTitle: "취소",
+                            rightButtonTitle: "삭제")
     }
 }

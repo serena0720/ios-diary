@@ -9,6 +9,7 @@ import UIKit
 
 final class AppManager {
     private let navigationController: UINavigationController
+    private let coreDataManger: CoreDataManager
     private let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         let localeID = Locale.preferredLanguages.first ?? "kr_KR"
@@ -20,36 +21,44 @@ final class AppManager {
         return dateFormatter
     }()
     
-    init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController, coreDataManger: CoreDataManager) {
         self.navigationController = navigationController
+        self.coreDataManger = coreDataManger
     }
     
     func start() {
-        guard let dairyContents = decodeDairySample(fileName: "sample") else { return }
-        let mainViewController = MainViewController(diaryContents: dairyContents, dateFormatter: dateFormatter)
+        let mainViewController = MainViewController(coreDataManager: coreDataManger, dateFormatter: dateFormatter)
         
         mainViewController.delegate = self
         navigationController.viewControllers = [mainViewController]
-    }
-    
-    private func decodeDairySample(fileName: String) -> [DiaryContent]? {
-        let jsonDecoder = JSONDecoder()
-        guard let asset = NSDataAsset(name: fileName) else { return nil }
-        guard let data = try? jsonDecoder.decode([DiaryContent].self, from: asset.data) else { return nil }
-        
-        return data
     }
 }
 
 // MARK: - MainViewControllerDelegate
 extension AppManager: MainViewControllerDelegate {
-    func didTappedRightAddButton() {
-        let diarySample = DiarySample()
+    func didTappedTableViewCell(diaryContent: DiaryEntity) {
         let todayDate = dateFormatter.string(from: Date())
-        let addDiaryViewController = AddDiaryViewController(todayDate: todayDate,
-                                                            diaryTitle: diarySample.title,
-                                                            diaryDescription: diarySample.description)
+        let diaryDetailViewController = DiaryDetailViewController(todayDate: todayDate, diaryContent: diaryContent)
         
-        navigationController.pushViewController(addDiaryViewController, animated: true)
+        diaryDetailViewController.delegate = self
+        navigationController.pushViewController(diaryDetailViewController, animated: true)
+    }
+    
+    func didTappedRightAddButton() {
+        let todayDate = dateFormatter.string(from: Date())
+        let diaryDetailViewController = DiaryDetailViewController(todayDate: todayDate)
+        
+        diaryDetailViewController.delegate = self
+        navigationController.pushViewController(diaryDetailViewController, animated: true)
+    }
+}
+
+// MARK: - DiaryDetailViewControllerDelegate
+extension AppManager: DiaryDetailViewControllerDelegate {
+    func saveDiaryContents(title: String, content: String) {
+        let todayDate = Date().timeIntervalSince1970
+        let diaryContent = DiaryContent(title: title, body: content, date: todayDate)
+        
+        coreDataManger.insertDiary(diaryContent: diaryContent)
     }
 }

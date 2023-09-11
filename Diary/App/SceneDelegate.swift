@@ -12,9 +12,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        
         let navigationController = UINavigationController()
-        appManager = AppManager(navigationController: navigationController)
+        let coreDataManager = CoreDataManager(name: "Diary")
+        appManager = AppManager(navigationController: navigationController, coreDataManger: coreDataManager)
         
         appManager?.start()
         window = UIWindow(windowScene: windowScene)
