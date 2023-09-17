@@ -39,6 +39,12 @@ final class MainTableViewCell: UITableViewCell, ReuseIdentifiable {
         return label
     }()
     
+    private let iconImage: UIImageView = {
+        let image = UIImageView()
+        
+        return image
+    }()
+    
     private let previewLabel: UILabel = {
         let label = UILabel()
         
@@ -69,7 +75,7 @@ final class MainTableViewCell: UITableViewCell, ReuseIdentifiable {
 // MARK: - Private
 extension MainTableViewCell {
     private func configureUI() {
-        [dateLabel, previewLabel].forEach {
+        [dateLabel, iconImage, previewLabel].forEach {
             contentsStackView.addArrangedSubview($0)
         }
         
@@ -84,7 +90,9 @@ extension MainTableViewCell {
         NSLayoutConstraint.activate([
             mainStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             mainStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            mainStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5)
+            mainStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
+            
+            iconImage.widthAnchor.constraint(equalTo: iconImage.heightAnchor, multiplier: 1)
         ])
         
         let mainStackViewBottomConstraint = mainStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5)

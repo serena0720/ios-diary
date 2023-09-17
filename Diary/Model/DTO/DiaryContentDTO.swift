@@ -2,7 +2,7 @@
 //  DiaryContentDTO.swift
 //  Diary
 //
-//  Created by Hyungmin Lee on 2023/09/14.
+//  Created by Zion, Serena on 2023/09/14.
 //
 
 import Foundation

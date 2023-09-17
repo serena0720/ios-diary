@@ -26,6 +26,8 @@
 		D2C1FBF32A9F0A0900526DA5 /* DiaryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2C1FBF22A9F0A0900526DA5 /* DiaryDetailViewController.swift */; };
 		D2C1FBF62A9F1EC100526DA5 /* AppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2C1FBF52A9F1EC100526DA5 /* AppManager.swift */; };
 		D2C8E5E62AB6E893005EFBC4 /* DiaryEntityVer2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = D2C8E5E52AB6E893005EFBC4 /* DiaryEntityVer2.xcmappingmodel */; };
+		D2C8E5E82AB6EE82005EFBC4 /* WeatherInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2C8E5E72AB6EE82005EFBC4 /* WeatherInformation.swift */; };
+		D2C8E5EA2AB6EECE005EFBC4 /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2C8E5E92AB6EECE005EFBC4 /* Weather.swift */; };
 		D2DB46872AA1A83B009D1926 /* ReuseIdentifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DB46862AA1A83B009D1926 /* ReuseIdentifiable.swift */; };
 /* End PBXBuildFile section */
 
@@ -52,6 +54,8 @@
 		D2C1FBF52A9F1EC100526DA5 /* AppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppManager.swift; sourceTree = "<group>"; };
 		D2C8E5E42AB6E82B005EFBC4 /* Diary ver2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Diary ver2.xcdatamodel"; sourceTree = "<group>"; };
 		D2C8E5E52AB6E893005EFBC4 /* DiaryEntityVer2.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = DiaryEntityVer2.xcmappingmodel; sourceTree = "<group>"; };
+		D2C8E5E72AB6EE82005EFBC4 /* WeatherInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherInformation.swift; sourceTree = "<group>"; };
+		D2C8E5E92AB6EECE005EFBC4 /* Weather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 		D2DB46862AA1A83B009D1926 /* ReuseIdentifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReuseIdentifiable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -123,6 +127,8 @@
 			isa = PBXGroup;
 			children = (
 				5BF1B2DD2AB2DA8800FDC1A5 /* DiaryContentDTO.swift */,
+				D2C8E5E72AB6EE82005EFBC4 /* WeatherInformation.swift */,
+				D2C8E5E92AB6EECE005EFBC4 /* Weather.swift */,
 			);
 			path = DTO;
 			sourceTree = "<group>";
@@ -296,7 +302,9 @@
 				D2BCA2B52AAF3B1500D55F4C /* CoreDataManager.swift in Sources */,
 				5BBC44392A9F036000C528DD /* MainTableViewCell.swift in Sources */,
 				5BF1B2DE2AB2DA8800FDC1A5 /* DiaryContentDTO.swift in Sources */,
+				D2C8E5E82AB6EE82005EFBC4 /* WeatherInformation.swift in Sources */,
 				D2C1FBF62A9F1EC100526DA5 /* AppManager.swift in Sources */,
+				D2C8E5EA2AB6EECE005EFBC4 /* Weather.swift in Sources */,
 				5B2E75E42AB322D7004D828F /* Diary.xcdatamodeld in Sources */,
 				D2DB46872AA1A83B009D1926 /* ReuseIdentifiable.swift in Sources */,
 				5BF1B2DA2AB2D9E000FDC1A5 /* MainViewControllerUseCase.swift in Sources */,
