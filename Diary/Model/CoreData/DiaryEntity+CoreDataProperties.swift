@@ -20,9 +20,10 @@ extension DiaryEntity {
     @NSManaged public var title: String
     @NSManaged public var body: String
     @NSManaged public var date: Double
-
+    @NSManaged public var icon: String
+    @NSManaged public var main: String
 }
 
-extension DiaryEntity : Identifiable {
+extension DiaryEntity: Identifiable {
 
 }

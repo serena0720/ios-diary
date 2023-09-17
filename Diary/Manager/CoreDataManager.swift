@@ -71,7 +71,7 @@ final class CoreDataManager<T>: CoreDataManagerType {
 
     func isExistData<T: Identifiable>(request: NSFetchRequest<T>, identifier: UUID) -> Bool where T.ID == UUID {
         guard let dataList = try? context.fetch(request) else { return false }
-        guard let data = dataList.filter({ $0.id == identifier}).first as? NSManagedObject else { return false }
+        guard dataList.filter({ $0.id == identifier}).first is NSManagedObject else { return false }
         
         return true
     }
